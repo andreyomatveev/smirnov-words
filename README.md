@@ -10,3 +10,7 @@ Based on the two Remarks made in Appendix A of the monograph
 [A.O. Matveev, Symmetric Cycles: 
 A 2D Perspective on Higher Dimensional Discrete Hypercubes, the Power Sets
 of Finite Sets, and Set Families](https://leanpub.com/SymmetricCycles), Leanpub, 2022. See the accompanying PDF-note.
+
+## Smirnov Words ##
+
+*Smirnov words* are defined to be words without consecutive equal letters.
