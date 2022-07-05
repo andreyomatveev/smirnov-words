@@ -13,4 +13,4 @@ of Finite Sets, and Set Families](https://leanpub.com/SymmetricCycles), Leanpub,
 
 ## Smirnov Words ##
 
-*Smirnov words* are defined to be words without consecutive equal letters.
+*Smirnov words* are words without consecutive equal letters.
