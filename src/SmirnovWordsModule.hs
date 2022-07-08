@@ -1,14 +1,13 @@
 -- Andrey O. Matveev
--- After Remarks A.1 and A.2 given in the monograph A.O. Matveev, Symmetric Cycles: A 2D Perspective
--- on Higher Dimensional Discrete Hypercubes, the Power Sets of Finite Sets, and Set Families,
--- Leanpub, 2022, https://leanpub.com/SymmetricCycles.
+-- After Remarks A.1 and A.2 made in the monograph A.O. Matveev, Symmetric Cycles,
+-- Jenny Stanford Publishing, 2023, https://www.jennystanford.com/ .
 --
 -- A Smirnov word is defined to be a word whose adjacent letters always differ.
 --
 -- In the theoretical framework of the breakthrough article
 --
 -- Helmut Prodinger, Ternary Smirnov words and generating functions. Integers, 2018, 18, Paper A69,
--- http://math.colgate.edu/~integers/vol18.html,
+-- http://math.colgate.edu/~integers/vol18.html ,
 --
 -- below we calculate the numbers of Smirnov words over three-letter and four-letter alphabets.
 
