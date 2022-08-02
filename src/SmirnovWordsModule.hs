@@ -1,28 +1,172 @@
 -- Andrey O. Matveev
--- After Remarks A.1 and A.2 made in the monograph A.O. Matveev, Symmetric Cycles,
--- Jenny Stanford Publishing, 2023, https://www.jennystanford.com/ .
+-- After Remarks A.1 and A.2 given in the monograph A.O. Matveev, Symmetric Cycles: A 2D Perspective
+-- on Higher Dimensional Discrete Hypercubes, the Power Sets of Finite Sets, and Set Families,
+-- Leanpub, 2022, https://leanpub.com/SymmetricCycles.
 --
 -- A Smirnov word is defined to be a word whose adjacent letters always differ.
 --
 -- In the theoretical framework of the breakthrough article
 --
 -- Helmut Prodinger, Ternary Smirnov words and generating functions. Integers, 2018, 18, Paper A69,
--- http://math.colgate.edu/~integers/vol18.html ,
+-- http://math.colgate.edu/~integers/vol18.html,
 --
 -- below we calculate the numbers of Smirnov words over three-letter and four-letter alphabets.
+{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 
 module SmirnovWordsModule
-  ( numberOfThetaThetaSmirnovWordsOverThreeLetterAlphabet
+  ( numberOfSmirnovWordsOverThreeLetterAlphabet
+  , numberOfSmirnovWordsOverFourLetterAlphabet
+  , numberOfThetaThetaSmirnovWordsOverThreeLetterAlphabet
   , numberOfThetaBetaSmirnovWordsOverThreeLetterAlphabet
   , numberOfThetaThetaSmirnovWordsOverFourLetterAlphabet
   , numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
+  , Alphabet3(..)
+  , Alphabet4(..)
+  , ParikhVector3
+  , ParikhVector4
   ) where
 
 import           Math.Combinatorics.Exact.Binomial (choose)
 
-type ParikhVector3 = (Integer, Integer, Integer) -- Parikh vectors for the three-letter alphabet $(\theta, \alpha, \beta)$
+data Alphabet3
+  = Theta3
+  | Alpha3
+  | Beta3
+  deriving (Eq) -- Our ordered three-letter alphabet $(\theta, \alpha, \beta)$
 
-type ParikhVector4 = (Integer, Integer, Integer, Integer) -- Parikh vectors for the four-letter alphabet $(\theta, \alpha, \beta, \gamma)$
+data Alphabet4
+  = Theta4
+  | Alpha4
+  | Beta4
+  | Gamma4
+  deriving (Eq) -- Our ordered four-letter alphabet $(\theta, \alpha, \beta, \gamma)$
+
+type ParikhVector3 = (Integer, Integer, Integer) -- Parikh vectors for the ordered three-letter alphabet $(\theta, \alpha, \beta)$
+
+type ParikhVector4 = (Integer, Integer, Integer, Integer) -- Parikh vectors for the ordered four-letter alphabet $(\theta, \alpha, \beta, \gamma)$
+
+numberOfSmirnovWordsOverThreeLetterAlphabet ::
+     (Alphabet3, Alphabet3) -> ParikhVector3 -> Integer
+-- Name means "To get (quite quickly) the number of distinct Smirnov words over the ordered three-letter alphabet $(\theta, \alpha, \beta)$
+-- that start with the letter `startWith', end with the letter `endWith',  and contain `numberOfThetas3' letters $\theta$,
+-- `numberOfAlphas3' letters $\alpha$, and `numberOfBetas3' letters $\beta$".
+-- Calculations are performed indirectly, with the help of the below `numberOfThetaThetaSmirnovWordsOverThreeLetterAlphabet'
+-- and `numberOfThetaBetaSmirnovWordsOverThreeLetterAlphabet' functions.
+-- Call for instance
+--    ghci> numberOfSmirnovWordsOverThreeLetterAlphabet (Beta3, Beta3) (1,1,2)
+-- to get the result:
+--    2
+-- Call
+--    ghci> numberOfSmirnovWordsOverThreeLetterAlphabet (Alpha3, Alpha3) (101,100,102)
+-- to get the result:
+--    3790534665259705960031424708550607354777746160746276209063613355454000
+-- Call
+--    ghci> numberOfSmirnovWordsOverThreeLetterAlphabet (Alpha3, Alpha3) (101,100,103)
+-- to get the result:
+--    371472397195451184083079621437959520768219123753135068488234108834492000
+--
+-- Call
+--    ghci> numberOfSmirnovWordsOverThreeLetterAlphabet (Beta3, Alpha3) (101,102,100)
+-- to get the result:
+--    201089778403474502041263056255634240679724473093327703535374720634792000
+-- Call
+--    ghci> numberOfSmirnovWordsOverThreeLetterAlphabet (Beta3, Alpha3) (101,103,100)
+-- to get the result:
+--    200898337258764415881665509553182189803220546519552639080371507839062000
+numberOfSmirnovWordsOverThreeLetterAlphabet (startWith, endWith) (numberOfThetas3, numberOfAlphas3, numberOfBetas3)
+  | (startWith, endWith) == (Theta3, Theta3) =
+    numberOfThetaThetaSmirnovWordsOverThreeLetterAlphabet
+      (numberOfThetas3, numberOfAlphas3, numberOfBetas3)
+  | (startWith, endWith) == (Alpha3, Alpha3) =
+    numberOfThetaThetaSmirnovWordsOverThreeLetterAlphabet
+      (numberOfAlphas3, numberOfThetas3, numberOfBetas3)
+  | (startWith, endWith) == (Beta3, Beta3) =
+    numberOfThetaThetaSmirnovWordsOverThreeLetterAlphabet
+      (numberOfBetas3, numberOfAlphas3, numberOfThetas3)
+  | (startWith, endWith) == (Theta3, Beta3) =
+    numberOfThetaBetaSmirnovWordsOverThreeLetterAlphabet
+      (numberOfThetas3, numberOfAlphas3, numberOfBetas3)
+  | (startWith, endWith) == (Theta3, Alpha3) =
+    numberOfThetaBetaSmirnovWordsOverThreeLetterAlphabet
+      (numberOfThetas3, numberOfBetas3, numberOfAlphas3)
+  | (startWith, endWith) == (Alpha3, Theta3) =
+    numberOfThetaBetaSmirnovWordsOverThreeLetterAlphabet
+      (numberOfAlphas3, numberOfBetas3, numberOfThetas3)
+  | (startWith, endWith) == (Alpha3, Beta3) =
+    numberOfThetaBetaSmirnovWordsOverThreeLetterAlphabet
+      (numberOfAlphas3, numberOfThetas3, numberOfBetas3)
+  | (startWith, endWith) == (Beta3, Alpha3) =
+    numberOfThetaBetaSmirnovWordsOverThreeLetterAlphabet
+      (numberOfBetas3, numberOfThetas3, numberOfAlphas3)
+  | (startWith, endWith) == (Beta3, Theta3) =
+    numberOfThetaBetaSmirnovWordsOverThreeLetterAlphabet
+      (numberOfBetas3, numberOfAlphas3, numberOfThetas3)
+
+numberOfSmirnovWordsOverFourLetterAlphabet ::
+     (Alphabet4, Alphabet4) -> ParikhVector4 -> Integer
+-- Name means "To get (quite quickly) the number of distinct Smirnov words over the ordered four-letter alphabet $(\theta, \alpha, \beta, \gamma)$
+-- that start with the letter `startWith', end with the letter `endWith',  and contain `numberOfThetas4' letters $\theta$,
+-- `numberOfAlphas4' letters $\alpha$, `numberOfBetas4' letters $\beta$, and `numberOfGammas4' letters $\gamma$".
+-- Calculations are performed indirectly, with the help of the below `numberOfThetaThetaSmirnovWordsOverFourLetterAlphabet'
+-- and `numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet' functions.
+-- Call for instance
+--    ghci> numberOfSmirnovWordsOverFourLetterAlphabet (Gamma4, Gamma4) (1,1,1,2)
+-- to get the result:
+--    6
+--
+-- Call for instance
+--    ghci> numberOfSmirnovWordsOverFourLetterAlphabet (Gamma4, Beta4) (1,1,1,1)
+-- to get the result:
+--    2
+numberOfSmirnovWordsOverFourLetterAlphabet (startWith, endWith) (numberOfThetas4, numberOfAlphas4, numberOfBetas4, numberOfGammas4)
+  | (startWith, endWith) == (Theta4, Theta4) =
+    numberOfThetaThetaSmirnovWordsOverFourLetterAlphabet
+      (numberOfThetas4, numberOfAlphas4, numberOfBetas4, numberOfGammas4)
+  | (startWith, endWith) == (Alpha4, Alpha4) =
+    numberOfThetaThetaSmirnovWordsOverFourLetterAlphabet
+      (numberOfAlphas4, numberOfThetas4, numberOfBetas4, numberOfGammas4)
+  | (startWith, endWith) == (Beta4, Beta4) =
+    numberOfThetaThetaSmirnovWordsOverFourLetterAlphabet
+      (numberOfBetas4, numberOfAlphas4, numberOfThetas4, numberOfGammas4)
+  | (startWith, endWith) == (Gamma4, Gamma4) =
+    numberOfThetaThetaSmirnovWordsOverFourLetterAlphabet
+      (numberOfGammas4, numberOfAlphas4, numberOfBetas4, numberOfThetas4)
+  | (startWith, endWith) == (Theta4, Alpha4) =
+    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
+      (numberOfThetas4, numberOfAlphas4, numberOfBetas4, numberOfGammas4)
+  | (startWith, endWith) == (Theta4, Beta4) =
+    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
+      (numberOfThetas4, numberOfBetas4, numberOfAlphas4, numberOfGammas4)
+  | (startWith, endWith) == (Theta4, Gamma4) =
+    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
+      (numberOfThetas4, numberOfGammas4, numberOfBetas4, numberOfAlphas4)
+  | (startWith, endWith) == (Alpha4, Theta4) =
+    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
+      (numberOfAlphas4, numberOfThetas4, numberOfBetas4, numberOfGammas4)
+  | (startWith, endWith) == (Alpha4, Beta4) =
+    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
+      (numberOfAlphas4, numberOfBetas4, numberOfThetas4, numberOfGammas4)
+  | (startWith, endWith) == (Alpha4, Gamma4) =
+    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
+      (numberOfAlphas4, numberOfGammas4, numberOfThetas4, numberOfBetas4)
+  | (startWith, endWith) == (Beta4, Theta4) =
+    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
+      (numberOfBetas4, numberOfThetas4, numberOfAlphas4, numberOfGammas4)
+  | (startWith, endWith) == (Beta4, Alpha4) =
+    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
+      (numberOfBetas4, numberOfAlphas4, numberOfThetas4, numberOfGammas4)
+  | (startWith, endWith) == (Beta4, Gamma4) =
+    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
+      (numberOfBetas4, numberOfGammas4, numberOfThetas4, numberOfAlphas4)
+  | (startWith, endWith) == (Gamma4, Theta4) =
+    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
+      (numberOfGammas4, numberOfThetas4, numberOfBetas4, numberOfAlphas4)
+  | (startWith, endWith) == (Gamma4, Alpha4) =
+    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
+      (numberOfGammas4, numberOfAlphas4, numberOfBetas4, numberOfThetas4)
+  | (startWith, endWith) == (Gamma4, Beta4) =
+    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
+      (numberOfGammas4, numberOfBetas4, numberOfAlphas4, numberOfThetas4)
 
 numberOfThetaThetaSmirnovWordsOverThreeLetterAlphabet ::
      ParikhVector3 -> Integer
@@ -37,7 +181,7 @@ numberOfThetaThetaSmirnovWordsOverThreeLetterAlphabet ::
 -- Call
 --    ghci> numberOfThetaThetaSmirnovWordsOverThreeLetterAlphabet (100,101,102)
 -- to get the result:
---    201089778403474502041263056255634240679724473093327703535374720634792000
+--    3790534665259705960031424708550607354777746160746276209063613355454000
 -- Call
 --    ghci> numberOfThetaThetaSmirnovWordsOverThreeLetterAlphabet (100,101,103)
 -- to get the result:
