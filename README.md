@@ -1,6 +1,6 @@
 # SmirnovWordsModule.hs #
 
-A Haskell `SmirnovWordsModule.hs` module exporting four functions for calculating 
+A Haskell `SmirnovWordsModule.hs` module exporting six functions for calculating 
 the numbers of Smirnov words over three-letter and four-letter alphabets in the 
 theoretical framework of the breakthrough article 
 [H. Prodinger, Ternary Smirnov words and generating functions](http://math.colgate.edu/~integers/vol18.html), Integers, 2018, 18,
