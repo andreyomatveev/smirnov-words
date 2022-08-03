@@ -11,6 +11,8 @@
 -- http://math.colgate.edu/~integers/vol18.html,
 --
 -- below we calculate the numbers of Smirnov words over three-letter and four-letter alphabets.
+
+{-# LANGUAGE MultiWayIf #-}
 {-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 
 module SmirnovWordsModule
@@ -74,33 +76,28 @@ numberOfSmirnovWordsOverThreeLetterAlphabet ::
 -- to get the result:
 --    200898337258764415881665509553182189803220546519552639080371507839062000
 numberOfSmirnovWordsOverThreeLetterAlphabet (startWith, endWith) (numberOfThetas3, numberOfAlphas3, numberOfBetas3)
-  | (startWith, endWith) == (Theta3, Theta3) =
+  | startWith == endWith =
     numberOfThetaThetaSmirnovWordsOverThreeLetterAlphabet
-      (numberOfThetas3, numberOfAlphas3, numberOfBetas3)
-  | (startWith, endWith) == (Alpha3, Alpha3) =
-    numberOfThetaThetaSmirnovWordsOverThreeLetterAlphabet
-      (numberOfAlphas3, numberOfThetas3, numberOfBetas3)
-  | (startWith, endWith) == (Beta3, Beta3) =
-    numberOfThetaThetaSmirnovWordsOverThreeLetterAlphabet
-      (numberOfBetas3, numberOfAlphas3, numberOfThetas3)
-  | (startWith, endWith) == (Theta3, Beta3) =
+      if | (startWith, endWith) == (Theta3, Theta3) ->
+           (numberOfThetas3, numberOfAlphas3, numberOfBetas3)
+         | (startWith, endWith) == (Alpha3, Alpha3) ->
+           (numberOfAlphas3, numberOfThetas3, numberOfBetas3)
+         | (startWith, endWith) == (Beta3, Beta3) ->
+           (numberOfBetas3, numberOfAlphas3, numberOfThetas3)
+  | otherwise =
     numberOfThetaBetaSmirnovWordsOverThreeLetterAlphabet
-      (numberOfThetas3, numberOfAlphas3, numberOfBetas3)
-  | (startWith, endWith) == (Theta3, Alpha3) =
-    numberOfThetaBetaSmirnovWordsOverThreeLetterAlphabet
-      (numberOfThetas3, numberOfBetas3, numberOfAlphas3)
-  | (startWith, endWith) == (Alpha3, Theta3) =
-    numberOfThetaBetaSmirnovWordsOverThreeLetterAlphabet
-      (numberOfAlphas3, numberOfBetas3, numberOfThetas3)
-  | (startWith, endWith) == (Alpha3, Beta3) =
-    numberOfThetaBetaSmirnovWordsOverThreeLetterAlphabet
-      (numberOfAlphas3, numberOfThetas3, numberOfBetas3)
-  | (startWith, endWith) == (Beta3, Alpha3) =
-    numberOfThetaBetaSmirnovWordsOverThreeLetterAlphabet
-      (numberOfBetas3, numberOfThetas3, numberOfAlphas3)
-  | (startWith, endWith) == (Beta3, Theta3) =
-    numberOfThetaBetaSmirnovWordsOverThreeLetterAlphabet
-      (numberOfBetas3, numberOfAlphas3, numberOfThetas3)
+      if | (startWith, endWith) == (Theta3, Beta3) ->
+           (numberOfThetas3, numberOfAlphas3, numberOfBetas3)
+         | (startWith, endWith) == (Theta3, Alpha3) ->
+           (numberOfThetas3, numberOfBetas3, numberOfAlphas3)
+         | (startWith, endWith) == (Alpha3, Theta3) ->
+           (numberOfAlphas3, numberOfBetas3, numberOfThetas3)
+         | (startWith, endWith) == (Alpha3, Beta3) ->
+           (numberOfAlphas3, numberOfThetas3, numberOfBetas3)
+         | (startWith, endWith) == (Beta3, Alpha3) ->
+           (numberOfBetas3, numberOfThetas3, numberOfAlphas3)
+         | (startWith, endWith) == (Beta3, Theta3) ->
+           (numberOfBetas3, numberOfAlphas3, numberOfThetas3)
 
 numberOfSmirnovWordsOverFourLetterAlphabet ::
      (Alphabet4, Alphabet4) -> ParikhVector4 -> Integer
@@ -119,54 +116,42 @@ numberOfSmirnovWordsOverFourLetterAlphabet ::
 -- to get the result:
 --    2
 numberOfSmirnovWordsOverFourLetterAlphabet (startWith, endWith) (numberOfThetas4, numberOfAlphas4, numberOfBetas4, numberOfGammas4)
-  | (startWith, endWith) == (Theta4, Theta4) =
+  | startWith == endWith =
     numberOfThetaThetaSmirnovWordsOverFourLetterAlphabet
-      (numberOfThetas4, numberOfAlphas4, numberOfBetas4, numberOfGammas4)
-  | (startWith, endWith) == (Alpha4, Alpha4) =
-    numberOfThetaThetaSmirnovWordsOverFourLetterAlphabet
-      (numberOfAlphas4, numberOfThetas4, numberOfBetas4, numberOfGammas4)
-  | (startWith, endWith) == (Beta4, Beta4) =
-    numberOfThetaThetaSmirnovWordsOverFourLetterAlphabet
-      (numberOfBetas4, numberOfAlphas4, numberOfThetas4, numberOfGammas4)
-  | (startWith, endWith) == (Gamma4, Gamma4) =
-    numberOfThetaThetaSmirnovWordsOverFourLetterAlphabet
-      (numberOfGammas4, numberOfAlphas4, numberOfBetas4, numberOfThetas4)
-  | (startWith, endWith) == (Theta4, Alpha4) =
+      if | (startWith, endWith) == (Theta4, Theta4) ->
+           (numberOfThetas4, numberOfAlphas4, numberOfBetas4, numberOfGammas4)
+         | (startWith, endWith) == (Alpha4, Alpha4) ->
+           (numberOfAlphas4, numberOfThetas4, numberOfBetas4, numberOfGammas4)
+         | (startWith, endWith) == (Beta4, Beta4) ->
+           (numberOfBetas4, numberOfAlphas4, numberOfThetas4, numberOfGammas4)
+         | (startWith, endWith) == (Gamma4, Gamma4) ->
+           (numberOfGammas4, numberOfAlphas4, numberOfBetas4, numberOfThetas4)
+  | otherwise =
     numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
-      (numberOfThetas4, numberOfAlphas4, numberOfBetas4, numberOfGammas4)
-  | (startWith, endWith) == (Theta4, Beta4) =
-    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
-      (numberOfThetas4, numberOfBetas4, numberOfAlphas4, numberOfGammas4)
-  | (startWith, endWith) == (Theta4, Gamma4) =
-    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
-      (numberOfThetas4, numberOfGammas4, numberOfBetas4, numberOfAlphas4)
-  | (startWith, endWith) == (Alpha4, Theta4) =
-    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
-      (numberOfAlphas4, numberOfThetas4, numberOfBetas4, numberOfGammas4)
-  | (startWith, endWith) == (Alpha4, Beta4) =
-    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
-      (numberOfAlphas4, numberOfBetas4, numberOfThetas4, numberOfGammas4)
-  | (startWith, endWith) == (Alpha4, Gamma4) =
-    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
-      (numberOfAlphas4, numberOfGammas4, numberOfThetas4, numberOfBetas4)
-  | (startWith, endWith) == (Beta4, Theta4) =
-    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
-      (numberOfBetas4, numberOfThetas4, numberOfAlphas4, numberOfGammas4)
-  | (startWith, endWith) == (Beta4, Alpha4) =
-    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
-      (numberOfBetas4, numberOfAlphas4, numberOfThetas4, numberOfGammas4)
-  | (startWith, endWith) == (Beta4, Gamma4) =
-    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
-      (numberOfBetas4, numberOfGammas4, numberOfThetas4, numberOfAlphas4)
-  | (startWith, endWith) == (Gamma4, Theta4) =
-    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
-      (numberOfGammas4, numberOfThetas4, numberOfBetas4, numberOfAlphas4)
-  | (startWith, endWith) == (Gamma4, Alpha4) =
-    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
-      (numberOfGammas4, numberOfAlphas4, numberOfBetas4, numberOfThetas4)
-  | (startWith, endWith) == (Gamma4, Beta4) =
-    numberOfThetaAlphaSmirnovWordsOverFourLetterAlphabet
-      (numberOfGammas4, numberOfBetas4, numberOfAlphas4, numberOfThetas4)
+      if | (startWith, endWith) == (Theta4, Alpha4) ->
+           (numberOfThetas4, numberOfAlphas4, numberOfBetas4, numberOfGammas4)
+         | (startWith, endWith) == (Theta4, Beta4) ->
+           (numberOfThetas4, numberOfBetas4, numberOfAlphas4, numberOfGammas4)
+         | (startWith, endWith) == (Theta4, Gamma4) ->
+           (numberOfThetas4, numberOfGammas4, numberOfBetas4, numberOfAlphas4)
+         | (startWith, endWith) == (Alpha4, Theta4) ->
+           (numberOfAlphas4, numberOfThetas4, numberOfBetas4, numberOfGammas4)
+         | (startWith, endWith) == (Alpha4, Beta4) ->
+           (numberOfAlphas4, numberOfBetas4, numberOfThetas4, numberOfGammas4)
+         | (startWith, endWith) == (Alpha4, Gamma4) ->
+           (numberOfAlphas4, numberOfGammas4, numberOfThetas4, numberOfBetas4)
+         | (startWith, endWith) == (Beta4, Theta4) ->
+           (numberOfBetas4, numberOfThetas4, numberOfAlphas4, numberOfGammas4)
+         | (startWith, endWith) == (Beta4, Alpha4) ->
+           (numberOfBetas4, numberOfAlphas4, numberOfThetas4, numberOfGammas4)
+         | (startWith, endWith) == (Beta4, Gamma4) ->
+           (numberOfBetas4, numberOfGammas4, numberOfThetas4, numberOfAlphas4)
+         | (startWith, endWith) == (Gamma4, Theta4) ->
+           (numberOfGammas4, numberOfThetas4, numberOfBetas4, numberOfAlphas4)
+         | (startWith, endWith) == (Gamma4, Alpha4) ->
+           (numberOfGammas4, numberOfAlphas4, numberOfBetas4, numberOfThetas4)
+         | (startWith, endWith) == (Gamma4, Beta4) ->
+           (numberOfGammas4, numberOfBetas4, numberOfAlphas4, numberOfThetas4)
 
 numberOfThetaThetaSmirnovWordsOverThreeLetterAlphabet ::
      ParikhVector3 -> Integer
