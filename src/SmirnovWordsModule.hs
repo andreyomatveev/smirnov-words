@@ -94,11 +94,11 @@ numberOfSmirnovWordsOverThreeLetterAlphabet (startWith, endWith) (numberOfThetas
            (numberOfAlphas3, numberOfBetas3, numberOfThetas3)
          | (startWith, endWith) == (Alpha3, Beta3) ->
            (numberOfAlphas3, numberOfThetas3, numberOfBetas3)
-         | (startWith, endWith) == (Beta3, Alpha3) ->
-           (numberOfBetas3, numberOfThetas3, numberOfAlphas3)
          | (startWith, endWith) == (Beta3, Theta3) ->
            (numberOfBetas3, numberOfAlphas3, numberOfThetas3)
-
+         | (startWith, endWith) == (Beta3, Alpha3) ->
+           (numberOfBetas3, numberOfThetas3, numberOfAlphas3)
+         
 numberOfSmirnovWordsOverFourLetterAlphabet ::
      (Alphabet4, Alphabet4) -> ParikhVector4 -> Integer
 -- Name means "To get (quite quickly) the number of distinct Smirnov words over the ordered four-letter alphabet $(\theta, \alpha, \beta, \gamma)$
